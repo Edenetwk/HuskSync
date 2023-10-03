@@ -102,6 +102,7 @@ public interface UserDataHolder extends DataHolder {
 
         // Synchronously attempt to apply the snapshot
         plugin.runSync(() -> {
+            System.out.println(getUsername() + "@ApplyingSnapshot");
             try {
                 for (Map.Entry<Identifier, Data> entry : unpacked.getData().entrySet()) {
                     final Identifier identifier = entry.getKey();

@@ -67,10 +67,13 @@ public abstract class EventListener {
             return;
         }
         lockedPlayers.add(user.getUuid());
+        System.out.println(user.getUsername()+"@Locked");
 
         plugin.runAsyncDelayed(() -> {
+            System.out.println(user.getUsername()+"@StartSync");
             // Fetch from the database if the user isn't changing servers
             if (!plugin.getRedisManager().getUserServerSwitch(user)) {
+                System.out.println(user.getUsername()+"@Fetch");
                 this.setUserFromDatabase(user);
                 return;
             }
@@ -81,18 +84,21 @@ public abstract class EventListener {
             final AtomicReference<Task.Repeating> task = new AtomicReference<>();
             final Runnable runnable = () -> {
                 if (user.isOffline()) {
+                    System.out.println(user.getUsername()+"@Failed02");
                     task.get().cancel();
                     return;
                 }
                 if (disabling || timesRun.getAndIncrement() > MAX_ATTEMPTS) {
+                    System.out.println(user.getUsername()+"@Failed03");
                     task.get().cancel();
                     this.setUserFromDatabase(user);
                     return;
                 }
 
                 plugin.getRedisManager().getUserData(user).ifPresent(redisData -> {
-                    task.get().cancel();
+                    System.out.println(user.getUsername()+"@DataGet");
                     user.applySnapshot(redisData, DataSnapshot.UpdateCause.SYNCHRONIZED);
+                    task.get().cancel();
                 });
             };
             task.set(plugin.getRepeatingTask(runnable, 10));

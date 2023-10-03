@@ -252,6 +252,7 @@ public class RedisManager extends JedisPubSub {
     }
 
     public boolean getUserServerSwitch(@NotNull User user) {
+        System.out.println(user.getUsername() + "@CheckServerSwitch");
         try (Jedis jedis = jedisPool.getResource()) {
             final byte[] key = getKey(RedisKeyType.SERVER_SWITCH, user.getUuid(), clusterId);
             final byte[] readData = jedis.get(key);
@@ -259,6 +260,7 @@ public class RedisManager extends JedisPubSub {
                 plugin.debug("[" + user.getUsername() + "] Could not read " +
                         RedisKeyType.SERVER_SWITCH.name() + " key from redis at: " +
                         new SimpleDateFormat("mm:ss.SSS").format(new Date()));
+                System.out.println(user.getUsername() + "@CheckServerSwitchComplete#false");
                 return false;
             }
             plugin.debug("[" + user.getUsername() + "] Successfully read "
@@ -267,6 +269,7 @@ public class RedisManager extends JedisPubSub {
 
             // Consume the key (delete from redis)
             jedis.del(key);
+            System.out.println(user.getUsername() + "@CheckServerSwitchComplete#true");
             return true;
         } catch (Throwable e) {
             plugin.log(Level.SEVERE, "An exception occurred fetching a user's server switch from redis", e);

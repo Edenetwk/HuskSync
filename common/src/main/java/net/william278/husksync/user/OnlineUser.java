@@ -134,6 +134,8 @@ public abstract class OnlineUser extends User implements CommandUser, UserDataHo
                 UserDataHolder.super.applySnapshot(
                         event.getData(), (succeeded) -> completeSync(succeeded, cause, getPlugin())
                 );
+            } else {
+                System.out.println(getUsername() + "@Failed04");
             }
         });
     }
@@ -145,6 +147,7 @@ public abstract class OnlineUser extends User implements CommandUser, UserDataHo
      * @param plugin    The plugin instance
      */
     public void completeSync(boolean succeeded, @NotNull DataSnapshot.UpdateCause cause, @NotNull HuskSync plugin) {
+        System.out.println(getUsername() + "@CompletingSync");
         if (succeeded) {
             switch (plugin.getSettings().getNotificationDisplaySlot()) {
                 case CHAT -> cause.getCompletedLocale(plugin).ifPresent(this::sendMessage);
@@ -158,7 +161,10 @@ public abstract class OnlineUser extends User implements CommandUser, UserDataHo
             }
             plugin.fireEvent(
                     plugin.getSyncCompleteEvent(this),
-                    (event) -> plugin.getLockedPlayers().remove(getUuid())
+                    (event) -> {
+                        plugin.getLockedPlayers().remove(getUuid());
+                        System.out.println(getUsername() + "@Unlocked");
+                    }
             );
         } else {
             cause.getFailedLocale(plugin).ifPresent(this::sendMessage);

@@ -22,6 +22,7 @@ package net.william278.husksync.event;
 import net.william278.husksync.HuskSync;
 import net.william278.husksync.data.DataSnapshot;
 import net.william278.husksync.user.OnlineUser;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +38,7 @@ public class BukkitPreSyncEvent extends BukkitPlayerEvent implements PreSyncEven
         super(player);
         this.data = data;
         this.plugin = plugin;
+        System.out.println(player.getUsername() + "@PreSync");
     }
 
     @Override

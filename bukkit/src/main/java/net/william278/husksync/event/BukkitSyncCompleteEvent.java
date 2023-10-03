@@ -21,6 +21,7 @@ package net.william278.husksync.event;
 
 import net.william278.husksync.HuskSync;
 import net.william278.husksync.user.OnlineUser;
+import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,6 +31,7 @@ public class BukkitSyncCompleteEvent extends BukkitPlayerEvent implements SyncCo
 
     protected BukkitSyncCompleteEvent(@NotNull OnlineUser player, @NotNull HuskSync plugin) {
         super(player);
+        System.out.println(player.getUsername() + "@SyncComplete");
     }
 
     @NotNull

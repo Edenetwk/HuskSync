@@ -216,6 +216,7 @@ public class MySqlDatabase extends Database {
     @Override
     public Optional<DataSnapshot.Packed> getLatestSnapshot(@NotNull User user) {
         try (Connection connection = getConnection()) {
+            System.out.println(user.getUsername() + "@UpdateSnapshot");
             try (PreparedStatement statement = connection.prepareStatement(formatStatementTables("""
                     SELECT `version_uuid`, `timestamp`, `data`
                     FROM `%user_data_table%`
@@ -232,12 +233,14 @@ public class MySqlDatabase extends Database {
                     final Blob blob = resultSet.getBlob("data");
                     final byte[] dataByteArray = blob.getBytes(1, (int) blob.length());
                     blob.free();
+                    System.out.println(user.getUsername() + "@UpdateSnapshotComplete");
                     return Optional.of(DataSnapshot.deserialize(plugin, dataByteArray, versionUuid, timestamp));
                 }
             }
         } catch (SQLException | DataAdapter.AdaptionException e) {
             plugin.log(Level.SEVERE, "Failed to fetch a user's current user data from the database", e);
         }
+        System.out.println(user.getUsername() + "@Failed05");
         return Optional.empty();
     }
 
